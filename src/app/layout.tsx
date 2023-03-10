@@ -1,8 +1,9 @@
 'use client'
-import { useState } from 'react';
+import { useState,useRef, useEffect } from 'react';
 import Image from 'next/image'
 import Link from 'next/link'
  import { useRouter,usePathname } from 'next/navigation';
+ import { BarcodeComponent } from './Components/NavbarCompents/Barcode';
 import './globals.css'
 import { MenuInterface } from './interface/MenuInterfaces'
 export const metadata = {
@@ -37,32 +38,39 @@ export default function RootLayout({
     path : 'tokopedia-care'
   }
 ]
+const [isHover,setIsHover] = useState<boolean>(false);
+const HoverRef = useRef<HTMLDivElement | null >(null)
  const pathname = usePathname()
- 
   return (
     <html lang="en">
        <html lang="en">
       <body>
+         
         <nav className='flex items-center justify-between mx-auto h-8 bg-[#F3F4F5]'>
           <div className='w-[95%] mx-auto flex justify-between items-center '>
-          <div className='flex items-center gap-1'>
+          <div ref={HoverRef} className='flex items-center gap-1 relative'>
             <Image src="/iconHome/icon-phone-home.png" alt='Phone' height={20} width={20}/>
-            <h1 className="text-[12.4px] text-[#6d6d71]">Download Tokopedia App</h1>
+            <h1 onMouseEnter={()=>setIsHover(true)} onMouseLeave={()=>setIsHover(false)} className="cursor-pointer text-[12.4px] text-[#6d6d71] hover:text-[#03AC0E]">Download Tokopedia App</h1>
+            
+            {isHover && <BarcodeComponent/>}
+            
             </div>     
+           
             <div className='flex gap-7 items-center mr-3'>
             {menu?.map((item,index)=>(
               <div  className='text-[#6d6d71] text-[12.5px] font-light' >
-               <Link href={item.path}>{item.menu}</Link>  
+               <Link href={item.path}>{item.menu}{isHover} </Link>  
                 
               
                 </div>
              ))}
             </div>
           </div>
-           
+        
         </nav>
         {children}
         </body>
+      
     </html>
     </html>
   )
